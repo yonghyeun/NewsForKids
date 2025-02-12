@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+import { BackwardButton, Button, CloseButton } from "./Button";
 import { Flex } from "./Flex";
 
 const meta: Meta = {
@@ -144,4 +144,12 @@ export const Warning: StoryObj<typeof Button> = {
   args: {
     variant: "warning",
   },
+};
+
+export const Close: StoryObj<typeof CloseButton> = {
+  render: (args) => <CloseButton {...args} />,
+};
+
+export const Backward: StoryObj<typeof BackwardButton> = {
+  render: (args) => <BackwardButton {...args} />,
 };

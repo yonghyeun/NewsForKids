@@ -1,5 +1,8 @@
+"use client";
+
 import clsx from "clsx";
 import React from "react";
+import { IoClose, IoArrowBack } from "react-icons/io5";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "accent" | "neutral" | "warning";
@@ -43,5 +46,25 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {children}
     </button>
+  );
+};
+
+export const CloseButton: React.FC<
+  Omit<ButtonProps, "children" | "variant">
+> = (props) => {
+  return (
+    <Button {...props}>
+      <IoClose />
+    </Button>
+  );
+};
+
+export const BackwardButton: React.FC<
+  Omit<ButtonProps, "children" | "variant">
+> = (props) => {
+  return (
+    <Button {...props}>
+      <IoArrowBack />
+    </Button>
   );
 };
