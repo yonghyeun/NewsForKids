@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { IoClose, IoArrowBack } from "react-icons/io5";
 
@@ -50,21 +51,26 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 export const CloseButton: React.FC<
-  Omit<ButtonProps, "children" | "variant">
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    onClick: () => void;
+  }
 > = (props) => {
   return (
-    <Button {...props}>
+    <button {...props} className="p-4 hover:bg-gray-100 rounded-md">
       <IoClose />
-    </Button>
+    </button>
   );
 };
 
-export const BackwardButton: React.FC<
-  Omit<ButtonProps, "children" | "variant">
-> = (props) => {
+export const BackwardButton: React.FC = () => {
+  const router = useRouter();
+
   return (
-    <Button {...props}>
+    <button
+      onClick={() => router.back()}
+      className="p-4 hover:bg-gray-100 rounded-md"
+    >
       <IoArrowBack />
-    </Button>
+    </button>
   );
 };
