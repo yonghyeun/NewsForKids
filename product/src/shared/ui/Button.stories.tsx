@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./Button";
+import { Flex } from "./Flex";
 
 const meta: Meta = {
   component: Button,
@@ -34,6 +35,13 @@ const meta: Meta = {
     size: "md",
     disabled: false,
   },
+  decorators: [
+    (Story) => (
+      <Flex gap="md" align="center">
+        <Story />
+      </Flex>
+    ),
+  ],
 };
 
 export default meta;
