@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: "div" | "section" | "header" | "footer" | "aside" | "main";
+  as?: "div" | "section" | "header" | "footer" | "aside" | "main" | "nav";
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
   align?: "start" | "center" | "end" | "stretch" | "baseline";
   gap?: "none" | "sm" | "md" | "lg";
