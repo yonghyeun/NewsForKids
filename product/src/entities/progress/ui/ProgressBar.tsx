@@ -26,7 +26,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         className={clsx(
           "bg-accent h-full",
           "absolute top-0 left-0",
-          "transition-all duration-200",
+          "transition-all duration-500 ease-in-out",
           "rounded-2xl",
           classNames.progress,
         )}

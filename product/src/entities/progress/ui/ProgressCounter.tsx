@@ -9,10 +9,16 @@ export const ProgressCounter: React.FC<ProgressProps> = ({
   total,
 }) => {
   return (
-    <Text as="p" className="flex gap-1">
-      <Text as="span">{padLeftZero(current)}</Text>
-      <Text as="span">/</Text>
-      <Text as="span">{padLeftZero(total)}</Text>
+    <Text as="p" className="flex gap-1 font-semibold">
+      <Text as="span" color="accent">
+        {padLeftZero(current)}
+      </Text>
+      <Text as="span" color="accent">
+        /
+      </Text>
+      <Text as="span" color="accent">
+        {padLeftZero(total)}
+      </Text>
     </Text>
   );
 };
