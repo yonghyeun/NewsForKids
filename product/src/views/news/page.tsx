@@ -1,5 +1,6 @@
 import React from "react";
-import { Flex, Text } from "@/shared/ui";
+import { QuizProgressNavigationBar } from "@/widgets/quiz/ui";
+import { Flex } from "@/shared/ui";
 
 export const NewsPage: React.FC = () => {
   return (
@@ -10,15 +11,7 @@ export const NewsPage: React.FC = () => {
       className="p-4 border max-w-5xl mx-auto"
     >
       {/* header */}
-      <Flex as="header" justify="between" align="stretch" gap="md">
-        <button>닫기</button>
-        <div className="flex-1 bg-gray-50">프로그레스바</div>
-        <Text as="p">
-          <Text as="span">1</Text>
-          <Text as="span">/</Text>
-          <Text as="span">10</Text>
-        </Text>
-      </Flex>
+      <QuizProgressNavigationBar current={1} total={10} />
       {/* main section */}
       <Flex
         as="main"

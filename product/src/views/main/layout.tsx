@@ -7,13 +7,7 @@ export const RootLayout = ({
 }>) => {
   return (
     <html lang="kr">
-      <body
-        className="min-h-screen
-        bg-gray-300
-      "
-      >
-        {children}
-      </body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 };
