@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
+  as?: "div" | "section" | "header" | "footer" | "aside" | "main";
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
   align?: "start" | "center" | "end" | "stretch" | "baseline";
   gap?: "none" | "sm" | "md" | "lg";
@@ -45,6 +46,7 @@ const wrapClasses = {
 };
 
 export const Flex: React.FC<FlexProps> = ({
+  as = "div",
   justify = "start",
   align = "stretch",
   gap = "none",
@@ -54,8 +56,10 @@ export const Flex: React.FC<FlexProps> = ({
   children,
   ...props
 }) => {
+  const Component: React.ElementType = as;
+
   return (
-    <div
+    <Component
       className={clsx(
         "flex",
         justifyClasses[justify],
@@ -68,6 +72,6 @@ export const Flex: React.FC<FlexProps> = ({
       {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 };
