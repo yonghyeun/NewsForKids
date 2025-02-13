@@ -24,7 +24,7 @@ export default meta;
 
 export const Default: StoryObj<typeof ProgressBar> = {
   render: (args) => (
-    <div className="w-96">
+    <div className="w-48 h-4 flex">
       <ProgressBar {...args} />
     </div>
   ),
