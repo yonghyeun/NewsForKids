@@ -1,11 +1,28 @@
+import { SearchParams } from "next/dist/server/request/search-params";
 import React from "react";
 import { QuizProgressNavigationBar } from "@/widgets/quiz/ui";
+import { getValidDateExpression } from "@/entities/date/lib";
 import { Flex } from "@/shared/ui";
 
-export const NewsPage: React.FC = () => {
+interface QuizCategoryPageProps {
+  params: Promise<{
+    category: string;
+  }>;
+  searchParams: Promise<SearchParams>;
+}
+
+export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
+  params,
+  searchParams,
+}) => {
+  const category = await params.then((params) => params.category);
+  const dateExpression = await searchParams.then((params) => params.date);
+
+  const validDateExpression = getValidDateExpression(dateExpression);
+
   return (
     <Flex
-      as="section"
+      as="main"
       direction="column"
       gap="lg"
       className="p-4 border max-w-5xl mx-auto"
