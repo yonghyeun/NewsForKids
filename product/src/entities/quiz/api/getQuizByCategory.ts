@@ -1,29 +1,37 @@
-import { ValidDateExpression } from "@/entities/date/types";
-import { apiClient } from "@/shared/api/lib";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient, prefetchQueryInServer } from "@/shared/api/lib";
+import type {
+  GetQuizByCategoryParams,
+  GetQuizByCategoryResponse,
+} from "../types";
+import { QUIZ_QUERY_KEYS } from "./queryKeys";
 
-export type QuizByCategoryResponse = {
-  category: string;
-  date: string;
-  totalPage: number;
-  currentPage: number;
-} & {
-  quiz: {
-    type: "blank";
-    question: string;
-    answer: string[];
-    options: string[];
-  };
+export const getQuizByCategory = ({
+  category,
+  date,
+  page,
+}: GetQuizByCategoryParams) => {
+  return apiClient.GET<GetQuizByCategoryResponse>({
+    pathname: `/quiz/${category}`,
+    searchParams: {
+      date,
+      page,
+    },
+  });
 };
 
-export const getQuizByCategory = (
-  category: string,
-  searchParams: {
-    date: ValidDateExpression;
-    page: number;
-  },
+export const serverPrefetchGetQuizByCategory = (
+  params: GetQuizByCategoryParams,
 ) => {
-  return apiClient.GET<QuizByCategoryResponse>({
-    pathname: `/quiz/${category}`,
-    searchParams,
+  return prefetchQueryInServer({
+    queryKey: QUIZ_QUERY_KEYS.getByCategory(params),
+    queryFn: () => getQuizByCategory(params),
+  });
+};
+
+export const useGetQuizByCategory = (params: GetQuizByCategoryParams) => {
+  return useQuery({
+    queryKey: QUIZ_QUERY_KEYS.getByCategory(params),
+    queryFn: () => getQuizByCategory(params),
   });
 };
