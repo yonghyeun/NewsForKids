@@ -2,6 +2,7 @@ import { SearchParams } from "next/dist/server/request/search-params";
 import React from "react";
 import { QuizProgressNavigationBar } from "@/widgets/quiz/ui";
 import { getValidDateExpression } from "@/entities/date/lib";
+import { getQuizByCategory } from "@/entities/quiz/api";
 import { Flex } from "@/shared/ui";
 
 interface QuizCategoryPageProps {
@@ -19,6 +20,11 @@ export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
   const dateExpression = await searchParams.then((params) => params.date);
 
   const validDateExpression = getValidDateExpression(dateExpression);
+
+  const data = await getQuizByCategory(category, {
+    date: validDateExpression,
+    page: 1,
+  });
 
   return (
     <Flex
