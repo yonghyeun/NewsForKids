@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient, prefetchQueryInServer } from "@/shared/api/lib";
 import type {
   GetQuizByCategoryParams,
@@ -33,5 +33,6 @@ export const useGetQuizByCategory = (params: GetQuizByCategoryParams) => {
   return useQuery({
     queryKey: QUIZ_QUERY_KEYS.getByCategory(params),
     queryFn: () => getQuizByCategory(params),
+    placeholderData: keepPreviousData,
   });
 };
