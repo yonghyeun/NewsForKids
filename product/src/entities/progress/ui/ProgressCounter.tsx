@@ -1,8 +1,7 @@
 import React from "react";
+import { padLeftZero } from "@/shared/lib/string";
 import { Text } from "@/shared/ui";
 import type { ProgressProps } from "./types";
-
-const padLeftZero = (num: number) => num.toString().padStart(2, "0");
 
 export const ProgressCounter: React.FC<ProgressProps> = ({
   current,
@@ -11,13 +10,13 @@ export const ProgressCounter: React.FC<ProgressProps> = ({
   return (
     <Text as="p" className="flex gap-1 font-semibold">
       <Text as="span" color="accent">
-        {padLeftZero(current)}
+        {padLeftZero(current, 2)}
       </Text>
       <Text as="span" color="accent">
         /
       </Text>
       <Text as="span" color="accent">
-        {padLeftZero(total)}
+        {padLeftZero(total, 2)}
       </Text>
     </Text>
   );
