@@ -1,4 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { BlankQuizFool } from "@/entities/quiz/types";
+
+const createRandomBlankQuiz = (): Omit<BlankQuizFool, "type"> => {
+  const originalQuestion = "가나다라마바사".split("");
+  const randomQuestionLength = 3;
+  const randomStartIndex = Math.min(
+    originalQuestion.length - 1 - randomQuestionLength,
+    Math.floor(Math.random() * 10),
+  );
+
+  const question = [
+    ...originalQuestion.slice(0, randomStartIndex),
+    "*".repeat(randomQuestionLength),
+    ...originalQuestion.slice(randomStartIndex + randomQuestionLength),
+  ];
+
+  const answer = originalQuestion.slice(
+    randomStartIndex,
+    randomStartIndex + randomQuestionLength,
+  );
+
+  const options = "가나다라마바사".split("");
+
+  return {
+    question: question.join(""),
+    answer,
+    options,
+  };
+};
 
 export const GET = (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
@@ -16,9 +45,7 @@ export const GET = (req: NextRequest) => {
     url: "https://news.com",
     quiz: {
       type: "blank",
-      question: "가나다라 *** 아자차 카타파하",
-      answer: "마바사".split(""),
-      options: "가나다라마바사아자차카".split(""),
+      ...createRandomBlankQuiz(),
     },
   });
 };
