@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BlankQuizFool } from "@/entities/quiz/types";
 import { WordWithKey } from "../types";
 
@@ -37,6 +37,11 @@ export const useFillInBlankQuiz = ({
       setSubmittedWords(submittedWords.slice(0, -1));
     }
   };
+
+  // props가 변경되면 상태 초기화
+  useEffect(() => {
+    setSubmittedWords([]);
+  }, [question, answer, options]);
 
   return {
     submittedWords,
