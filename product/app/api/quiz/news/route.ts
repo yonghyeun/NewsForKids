@@ -1,51 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BlankQuizFool } from "@/entities/quiz/types";
+import { createRandomBlankQuiz } from "./quiz";
+import { getYoutubePlaylist } from "./video";
 
-const createRandomBlankQuiz = (): Omit<BlankQuizFool, "type"> => {
-  const originalQuestion = "가나다라마바사".split("");
-  const randomQuestionLength = 3;
-  const randomStartIndex = Math.min(
-    originalQuestion.length - 1 - randomQuestionLength,
-    Math.floor(Math.random() * 10),
-  );
-
-  const question = [
-    ...originalQuestion.slice(0, randomStartIndex),
-    "*".repeat(randomQuestionLength),
-    ...originalQuestion.slice(randomStartIndex + randomQuestionLength),
-  ];
-
-  const answer = originalQuestion.slice(
-    randomStartIndex,
-    randomStartIndex + randomQuestionLength,
-  );
-
-  const options = "가나다라마바사".split("");
-
-  return {
-    question: question.join(""),
-    answer,
-    options,
-  };
-};
-
-export const GET = (req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
 
   const date = searchParams.get("date");
   const page = searchParams.get("page");
 
-  return NextResponse.json({
-    category: "news",
-    date,
-    totalPage: 5,
-    currentPage: Number(page),
-    title: "오늘의 뉴스 제목",
-    // TODO : 뉴스 api 연동
-    url: "https://news.com",
-    quiz: {
-      type: "blank",
-      ...createRandomBlankQuiz(),
-    },
-  });
+  try {
+    const PLAY_LIST_ID = "PL2nBWWs4L0mi6am0NAUiVN1zAhwIyaSCv";
+    const video = await getYoutubePlaylist(PLAY_LIST_ID, Number(page));
+
+    // 뭐가 됐건 프론트엔드 입장에서는 video id,title,thumbnail만 존재하면 된다.
+
+    return NextResponse.json({
+      category: "news",
+      date,
+      totalPage: 5,
+      currentPage: Number(page),
+      video,
+      quiz: {
+        type: "blank",
+        ...createRandomBlankQuiz(),
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "뉴스 데이터를 가져오는데 실패했습니다." },
+      {
+        status: 500,
+      },
+    );
+  }
 };
