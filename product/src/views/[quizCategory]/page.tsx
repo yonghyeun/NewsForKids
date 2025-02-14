@@ -1,8 +1,12 @@
-import { SearchParams } from "next/dist/server/request/search-params";
+import type { SearchParams } from "next/dist/server/request/search-params";
 import React from "react";
-import { QuizProgressNavigationBar } from "@/widgets/quiz/ui";
+import { HydrationBoundary } from "@tanstack/react-query";
+import * as Quiz from "@/widgets/quiz/ui";
 import { getValidDateExpression } from "@/entities/date/lib";
-import { getQuizByCategory } from "@/entities/quiz/api";
+import {
+  isValidCategory,
+  serverPrefetchGetQuizByCategory,
+} from "@/entities/quiz/api";
 import { Flex } from "@/shared/ui";
 
 interface QuizCategoryPageProps {
@@ -17,12 +21,18 @@ export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
   searchParams,
 }) => {
   const category = await params.then((params) => params.category);
-  const dateExpression = await searchParams.then((params) => params.date);
+  const date = await searchParams.then((params) =>
+    getValidDateExpression(params.date),
+  );
 
-  const validDateExpression = getValidDateExpression(dateExpression);
+  // TODO : 404 페이지 만들기
+  if (!isValidCategory(category)) {
+    return <div>404</div>;
+  }
 
-  const data = await getQuizByCategory(category, {
-    date: validDateExpression,
+  const prefetchedQueryClient = await serverPrefetchGetQuizByCategory({
+    category,
+    date,
     page: 1,
   });
 
@@ -33,28 +43,16 @@ export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
       gap="lg"
       className="p-4 border max-w-5xl mx-auto"
     >
-      {/* header */}
-      <QuizProgressNavigationBar current={1} total={10} />
-      {/* main section */}
-      <Flex
-        as="main"
-        direction="column"
-        justify="around"
-        gap="md"
-        className="flex-1 py-8
-        "
-      >
-        <div className="w-full max-w-96 aspect-square bg-gray-100">
-          비디오 대따큰 비디오
-        </div>
-
-        <div>
-          <div>문제 맞추는 섹션</div>
-          <div>문제 보기가 나오는 섹션</div>
-          <div>다음 버튼</div>
-        </div>
-      </Flex>
-      <footer>CopyRight 2021. All rights reserved.</footer>
+      <HydrationBoundary state={prefetchedQueryClient}>
+        <Quiz.Provider category={category} date={date}>
+          <Quiz.ProgressNavigationBar />
+          <div className="w-full max-w-96 aspect-square bg-gray-100">
+            비디오 대따큰 비디오
+          </div>
+          <Quiz.Content />
+          <footer>CopyRight 2025. All rights reserved.</footer>
+        </Quiz.Provider>
+      </HydrationBoundary>
     </Flex>
   );
 };
