@@ -12,10 +12,12 @@ export type GetQuizByCategoryResponse = {
   totalPage: number;
   currentPage: number;
 } & {
-  quiz: {
-    type: "blank";
-    question: string;
-    answer: string[];
-    options: string[];
-  };
+  quiz: BlankQuizFool;
 };
+
+export interface BlankQuizFool {
+  type: "blank";
+  question: string;
+  answer: string[];
+  options: string[];
+}
