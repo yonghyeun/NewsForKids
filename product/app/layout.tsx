@@ -1,16 +1,4 @@
-import React from "react";
-
+import { RootLayout } from "@/views/main";
 import "./globals.css";
 
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="kr">
-      <body>{children}</body>
-    </html>
-  );
-}
+export default RootLayout;

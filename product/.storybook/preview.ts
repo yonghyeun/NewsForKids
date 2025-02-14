@@ -1,5 +1,7 @@
+import React from "react";
 import type { Preview } from "@storybook/react";
 import "../app/globals.css";
+import { ReactQueryProvider } from "../src/app/ReactQueryProvider";
 
 const preview: Preview = {
   tags: ["autodocs"],
@@ -11,6 +13,13 @@ const preview: Preview = {
       },
     },
     layout: "centered",
+    decorators: [
+      (story) => {
+        React.createElement(ReactQueryProvider, {
+          children: React.createElement(story),
+        });
+      },
+    ],
   },
 };
 
