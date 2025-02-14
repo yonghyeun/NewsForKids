@@ -11,11 +11,14 @@ export const GET = (req: NextRequest) => {
     date,
     totalPage: 5,
     currentPage: Number(page),
+    title: "오늘의 뉴스 제목",
+    // TODO : 뉴스 api 연동
+    url: "https://news.com",
     quiz: {
       type: "blank",
       question: "가나다라 *** 아자차 카타파하",
       answer: "마바사".split(""),
-      options: "아마자차바카타사파하".split(""),
+      options: "가나다라마바사아자차카".split(""),
     },
   });
 };

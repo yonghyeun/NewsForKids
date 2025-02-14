@@ -9,6 +9,8 @@ export interface GetQuizByCategoryParams {
 export type GetQuizByCategoryResponse = {
   category: Category;
   date: string;
+  title: string;
+  url: string;
   totalPage: number;
   currentPage: number;
 } & {
