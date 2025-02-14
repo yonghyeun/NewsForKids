@@ -32,7 +32,7 @@ interface TextProps
 }
 
 export const Text: React.FC<TextProps> = ({
-  as = "p",
+  as = "span",
   size = "md",
   color = "black",
   className,
