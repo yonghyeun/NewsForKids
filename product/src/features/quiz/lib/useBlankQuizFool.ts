@@ -4,7 +4,6 @@ import {
   createValueWithKey,
   isSameArray,
   isSameLength,
-  extractKey,
   isValueAtLast,
 } from "@/shared/lib/array";
 import type { ValueWithKey } from "@/shared/lib/array";
@@ -17,9 +16,10 @@ export const useBlankQuizFool = ({
   const [filledWords, setFilledWords] = useState<ValueWithKey<string>[]>([]);
 
   const questionWords = question.map(createValueWithKey);
-  const submitAbleWords = options.map(createValueWithKey).filter(({ key }) => {
-    return !filledWords.map(extractKey("key")).includes(key);
-  });
+  const submitAbleWords = options.map(createValueWithKey).map((item) => ({
+    ...item,
+    isUsed: filledWords.some((filledWord) => filledWord.key === item.key),
+  }));
 
   const handleFill = (ValueWithKey: ValueWithKey<string>) => {
     if (isSameLength(filledWords, answer)) {

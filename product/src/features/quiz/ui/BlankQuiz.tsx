@@ -65,17 +65,18 @@ const Options = () => {
 
   return (
     <Flex gap="sm" align="center">
-      {submitAbleWords.map((submitAbleWord) => {
+      {submitAbleWords.map(({ value, key, isUsed }) => {
         return (
           <Button
-            key={submitAbleWord.key}
+            key={key}
             onClick={() => {
-              handleFill(submitAbleWord);
+              handleFill({ value, key });
             }}
             variant="primary"
             size="md"
+            disabled={isUsed}
           >
-            {submitAbleWord.value}
+            {value}
           </Button>
         );
       })}
