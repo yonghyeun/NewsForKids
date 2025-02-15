@@ -115,6 +115,10 @@ const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
           height: "100%",
           playerVars: {
             autoplay: 1,
+            // 관련 영상이 아예 뜨지 않도록 하는 것은 불가능하다.
+            // 하지만 0으로 설정 할 경우 해당 채널의 영상만이 관련 영상으로 뜨게 제어 가능하다.
+            // https://developers.google.com/youtube/player_parameters#controls
+            rel: 0,
           },
         }}
       />
