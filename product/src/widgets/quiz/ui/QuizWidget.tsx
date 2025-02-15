@@ -17,6 +17,7 @@ import type {
   Category,
   GetQuizByCategoryResponse,
 } from "@/entities/quiz/types";
+import { either } from "@/shared/lib/function";
 import { BackwardButton, Flex, Heading } from "@/shared/ui";
 
 interface QuizWidgetProps {
@@ -91,7 +92,7 @@ const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
               onCorrect={() => handlePage((prev) => prev + 1)}
               onIncorrect={() => alert("틀렸습니다.")}
             >
-              {query.isFetching ? "loading" : "제출"}
+              {either(query.isFetching, "loading", "제출")}
             </BlankQuiz.SubmitButton>
           </div>
         </BlankQuiz>
@@ -108,7 +109,11 @@ const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
     <Flex direction="column" gap="sm" align="center">
       <Heading color="black">{video.title}</Heading>
       <YouTube
-        className={`w-full aspect-${video.ratio}`}
+        className={either(
+          video.ratio === "video",
+          "w-full aspect-video",
+          "h-full aspect-shorts",
+        )}
         videoId={video.videoId}
         opts={{
           width: "100%",

@@ -1,7 +1,10 @@
 import { isShallowEqual, isDeepEqual } from "../boolean";
+import { either } from "../function";
 
 export const isValueAtLast = <T>(array: T[], value: T, deep?: boolean) => {
-  return deep
-    ? isShallowEqual(array[array.length - 1], value)
-    : isDeepEqual(array[array.length - 1], value);
+  return either(
+    !!deep,
+    isShallowEqual(array[array.length - 1], value),
+    isDeepEqual(array[array.length - 1], value),
+  );
 };

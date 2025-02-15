@@ -1,4 +1,5 @@
 import { YOUTUBE_API_KEY } from "@/shared/api/config";
+import { either } from "@/shared/lib/function";
 
 interface VideoSnippet {
   publishedAt: string;
@@ -51,12 +52,12 @@ export const pickYoutubeInfoByPage = (
   page: number,
 ) => {
   const videoItem = videoItems[page];
-  const { title, thumbnails, resourceId } = videoItem.snippet;
+  const { title, resourceId } = videoItem.snippet;
 
   return {
     title,
     videoId: resourceId.videoId,
-    ratio: page === 2 ? "shorts" : "video",
+    ratio: either(page === 2, "16:9", "4:3"),
   };
 };
 
