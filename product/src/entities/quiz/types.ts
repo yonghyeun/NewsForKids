@@ -12,13 +12,6 @@ export interface BlankQuizFool {
 interface VideoInfo {
   videoId: string;
   title: string;
-  thumbnail: {
-    [key in "default" | "medium" | "high" | "standard" | "maxres"]: {
-      url: string;
-      width: number;
-      height: number;
-    };
-  };
   ratio: "shorts" | "video";
 }
 

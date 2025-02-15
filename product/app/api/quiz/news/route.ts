@@ -12,8 +12,6 @@ export const GET = async (req: NextRequest) => {
     const PLAY_LIST_ID = "PL2nBWWs4L0mi6am0NAUiVN1zAhwIyaSCv";
     const video = await getYoutubePlaylist(PLAY_LIST_ID, Number(page));
 
-    // 뭐가 됐건 프론트엔드 입장에서는 video id,title,thumbnail만 존재하면 된다.
-
     return NextResponse.json({
       category: "news",
       date,
