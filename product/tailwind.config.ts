@@ -30,6 +30,9 @@ module.exports = {
           dark: "#B22222", // Firebrick
         },
       },
+      aspectRatio: {
+        shorts: "9 / 16",
+      },
     },
   },
   plugins: [],

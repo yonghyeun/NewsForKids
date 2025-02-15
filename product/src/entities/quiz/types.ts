@@ -19,6 +19,7 @@ interface VideoInfo {
       height: number;
     };
   };
+  ratio: "shorts" | "video";
 }
 
 export type QuizFool = BlankQuizFool;

@@ -108,7 +108,7 @@ const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
     <Flex direction="column" gap="sm" align="center">
       <Heading color="black">{video.title}</Heading>
       <YouTube
-        className="w-full aspect-video"
+        className={`w-full aspect-${video.ratio}`}
         videoId={video.videoId}
         opts={{
           width: "100%",
