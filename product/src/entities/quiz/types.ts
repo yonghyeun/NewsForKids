@@ -1,5 +1,12 @@
 export type Category = "news";
 
+export interface BlankQuizFool {
+  type: "blank";
+  question: string;
+  answer: string[];
+  options: string[];
+}
+
 interface VideoInfo {
   videoId: string;
   title: string;
@@ -28,9 +35,7 @@ export type GetQuizByCategoryResponse = {
   quiz: BlankQuizFool;
 };
 
-export interface BlankQuizFool {
-  type: "blank";
-  question: string;
-  answer: string[];
-  options: string[];
+export interface WordWithKey {
+  word: string;
+  key: number;
 }
