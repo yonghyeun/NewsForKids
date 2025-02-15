@@ -3,6 +3,7 @@ import { BlankQuizFool } from "@/entities/quiz/types";
 import {
   createValueWithKey,
   extractKey,
+  hasValueInArray,
   isSameArray,
   isSameLength,
   isValueAtLast,
@@ -19,7 +20,7 @@ export const useBlankQuizFool = ({
   const questionWords = question.map(createValueWithKey);
   const submitAbleWords = options.map(createValueWithKey).map((item) => ({
     ...item,
-    isUsed: filledWords.map(extractKey("key")).includes(item.key),
+    isUsed: hasValueInArray(item.key, filledWords.map(extractKey("key"))),
   }));
 
   const handleFill = (ValueWithKey: ValueWithKey<string>) => {
