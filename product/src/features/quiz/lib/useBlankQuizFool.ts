@@ -30,7 +30,7 @@ export const useBlankQuizFool = ({
   };
 
   const handleErase = (valueWithKey: ValueWithKey<string>) => {
-    if (isValueAtLast(filledWords, valueWithKey)) {
+    if (isValueAtLast(valueWithKey, filledWords)) {
       setFilledWords(filledWords.slice(0, -1));
     }
   };
