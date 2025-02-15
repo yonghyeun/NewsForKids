@@ -98,19 +98,16 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   onIncorrect,
   ...props
 }) => {
-  const { isCorrect } = use(BlankQuizContext)!;
+  const { isCorrect, isFullFilled } = use(BlankQuizContext)!;
 
   return (
     <Button
       onClick={() => {
-        if (isCorrect) {
-          onCorrect();
-        } else {
-          onIncorrect();
-        }
+        either(isCorrect, onIncorrect, onCorrect);
       }}
+      disabled={!isFullFilled}
       {...props}
-    >
+    > 
       {children}
     </Button>
   );

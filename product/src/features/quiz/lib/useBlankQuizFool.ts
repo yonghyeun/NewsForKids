@@ -23,6 +23,9 @@ export const useBlankQuizFool = ({
     isUsed: hasValueInArray(item.key, filledWords.map(extractKey("key"))),
   }));
 
+  const isCorrect = isSameArray(filledWords.map(extractKey("value")), answer);
+  const isFullFilled = isSameLength(filledWords, answer);
+
   const handleFill = (ValueWithKey: ValueWithKey<string>) => {
     if (isSameLength(filledWords, answer)) {
       return;
@@ -37,7 +40,6 @@ export const useBlankQuizFool = ({
     }
   };
 
-  const isCorrect = isSameArray(filledWords.map(extractKey("value")), answer);
 
   useEffect(() => {
     setFilledWords([]);
@@ -53,6 +55,7 @@ export const useBlankQuizFool = ({
     questionWords,
     submitAbleWords,
     isCorrect,
+    isFullFilled,
     // handlers
     handleFill,
     handleErase,
