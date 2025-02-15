@@ -92,7 +92,7 @@ const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
               onCorrect={() => handlePage((prev) => prev + 1)}
               onIncorrect={() => alert("틀렸습니다.")}
             >
-              {either(query.isFetching, "loading", "제출")}
+              {either(query.isFetching, "제출", "loading")}
             </BlankQuiz.SubmitButton>
           </div>
         </BlankQuiz>
