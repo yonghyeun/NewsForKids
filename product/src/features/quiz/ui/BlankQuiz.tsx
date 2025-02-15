@@ -1,6 +1,7 @@
 import { PropsWithChildren, use } from "react";
 import { createContext } from "react";
 import { BlankQuizFool } from "@/entities/quiz/types";
+import { either } from "@/shared/lib/function";
 import { Button, Flex } from "@/shared/ui";
 import { useBlankQuizFool } from "../lib";
 
@@ -36,7 +37,7 @@ const Question = () => {
           if (filledWord) {
             return (
               <Button
-                key={filledWord.key}
+                key={`filled-${key}`}
                 onClick={() => {
                   handleErase(filledWord);
                 }}
@@ -49,7 +50,7 @@ const Question = () => {
           }
 
           return (
-            <Button key={key} variant="accent" size="md">
+            <Button key={`unfilled-${key}`} variant="accent" size="md">
               __
             </Button>
           );
