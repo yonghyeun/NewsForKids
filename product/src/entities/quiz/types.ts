@@ -1,8 +1,10 @@
+import { ValidDateExpression } from "../date/types";
+
 export type Category = "news";
 
 export interface BlankQuizFool {
   type: "blank";
-  question: string;
+  question: string[];
   answer: string[];
   options: string[];
 }
@@ -19,9 +21,11 @@ interface VideoInfo {
   };
 }
 
+export type QuizFool = BlankQuizFool;
+
 export interface GetQuizByCategoryParams {
   category: Category;
-  date: string;
+  date: ValidDateExpression;
   page: number;
 }
 
@@ -31,11 +35,5 @@ export type GetQuizByCategoryResponse = {
   video: VideoInfo;
   totalPage: number;
   currentPage: number;
-} & {
-  quiz: BlankQuizFool;
+  quiz: QuizFool;
 };
-
-export interface WordWithKey {
-  word: string;
-  key: number;
-}

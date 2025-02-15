@@ -10,7 +10,7 @@ export const createRandomBlankQuiz = (): Omit<BlankQuizFool, "type"> => {
 
   const question = [
     ...originalQuestion.slice(0, randomStartIndex),
-    "*".repeat(randomQuestionLength),
+    ..."*".repeat(randomQuestionLength).split(""),
     ...originalQuestion.slice(randomStartIndex + randomQuestionLength),
   ];
 
@@ -22,7 +22,7 @@ export const createRandomBlankQuiz = (): Omit<BlankQuizFool, "type"> => {
   const options = "가나다라마바사".split("");
 
   return {
-    question: question.join(""),
+    question,
     answer,
     options,
   };
