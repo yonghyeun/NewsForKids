@@ -1,12 +1,13 @@
 "use client";
 
-import {
+import React, {
   SetStateAction,
   Suspense,
   use,
   useState,
   type PropsWithChildren,
 } from "react";
+import YouTube from "react-youtube";
 import { UseQueryResult } from "@tanstack/react-query";
 import { BlankQuiz } from "@/features/quiz/ui";
 import type { ValidDateExpression } from "@/entities/date/types";
@@ -16,12 +17,28 @@ import type {
   Category,
   GetQuizByCategoryResponse,
 } from "@/entities/quiz/types";
-import { BackwardButton, Flex } from "@/shared/ui";
+import { BackwardButton, Flex, Heading } from "@/shared/ui";
 
 interface QuizWidgetProps {
   category: Category;
   date: ValidDateExpression;
 }
+
+export const QuizWidget: React.FC<QuizWidgetProps> = ({ category, date }) => {
+  const [page, setPage] = useState<number>(1);
+  const query = useGetQuizByCategory({ category, date, page });
+  const handlePage = (callback: SetStateAction<number>) => setPage(callback);
+
+  return (
+    <QuizWidgetContainer>
+      <Suspense fallback={<div>...loading</div>}>
+        <QuizProgressNavigationBar query={query} />
+        <QuizVideo query={query} />
+        <ConditionalQuizFool query={query} handlePage={handlePage} />
+      </Suspense>
+    </QuizWidgetContainer>
+  );
+};
 
 const QuizWidgetContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -84,17 +101,23 @@ const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
   }
 };
 
-export const QuizWidget: React.FC<QuizWidgetProps> = ({ category, date }) => {
-  const [page, setPage] = useState<number>(1);
-  const query = useGetQuizByCategory({ category, date, page });
-  const handlePage = (callback: SetStateAction<number>) => setPage(callback);
+const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
+  const { video } = use(query.promise);
 
   return (
-    <QuizWidgetContainer>
-      <Suspense fallback={<div>...loading</div>}>
-        <QuizProgressNavigationBar query={query} />
-        <ConditionalQuizFool query={query} handlePage={handlePage} />
-      </Suspense>
-    </QuizWidgetContainer>
+    <Flex direction="column" gap="sm" align="center">
+      <Heading color="black">{video.title}</Heading>
+      <YouTube
+        className="w-full aspect-video"
+        videoId={video.videoId}
+        opts={{
+          width: "100%",
+          height: "100%",
+          playerVars: {
+            autoplay: 1,
+          },
+        }}
+      />
+    </Flex>
   );
 };

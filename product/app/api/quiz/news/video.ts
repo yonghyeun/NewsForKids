@@ -76,7 +76,7 @@ export const getYoutubePlaylist = async (
     key: YOUTUBE_API_KEY,
     part: "snippet",
     playlistId: PLAY_LIST_ID,
-    maxResults: "5",
+    maxResults: "10",
   }).toString();
 
   const response = await fetch(url);
