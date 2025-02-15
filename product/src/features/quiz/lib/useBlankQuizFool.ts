@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BlankQuizFool } from "@/entities/quiz/types";
 import {
   createValueWithKey,
+  extractKey,
   isSameArray,
   isSameLength,
   isValueAtLast,
@@ -18,7 +19,7 @@ export const useBlankQuizFool = ({
   const questionWords = question.map(createValueWithKey);
   const submitAbleWords = options.map(createValueWithKey).map((item) => ({
     ...item,
-    isUsed: filledWords.some((filledWord) => filledWord.key === item.key),
+    isUsed: filledWords.map(extractKey("key")).includes(item.key),
   }));
 
   const handleFill = (ValueWithKey: ValueWithKey<string>) => {
@@ -35,10 +36,7 @@ export const useBlankQuizFool = ({
     }
   };
 
-  const isCorrect = isSameArray(
-    filledWords.map(({ value }) => value),
-    answer,
-  );
+  const isCorrect = isSameArray(filledWords.map(extractKey("value")), answer);
 
   useEffect(() => {
     setFilledWords([]);
