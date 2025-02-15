@@ -7,19 +7,14 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { createContext } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
-import { useBlankQuizFool } from "@/features/quiz/lib";
 import { BlankQuiz } from "@/features/quiz/ui";
 import type { ValidDateExpression } from "@/entities/date/types";
 import { ProgressBar, ProgressCounter } from "@/entities/progress/ui";
-import type { ProgressProps } from "@/entities/progress/ui";
 import { useGetQuizByCategory } from "@/entities/quiz/api";
 import type {
-  BlankQuizFool,
   Category,
   GetQuizByCategoryResponse,
-  QuizFool,
 } from "@/entities/quiz/types";
 import { BackwardButton, Flex } from "@/shared/ui";
 
