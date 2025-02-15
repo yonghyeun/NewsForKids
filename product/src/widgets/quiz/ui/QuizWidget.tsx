@@ -1,14 +1,25 @@
 "use client";
 
-import { type PropsWithChildren, createContext, use, useState } from "react";
+import {
+  SetStateAction,
+  Suspense,
+  use,
+  useState,
+  type PropsWithChildren,
+} from "react";
+import { createContext } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
-import { FillInBlankQuiz } from "@/features/quiz/ui";
+import { useBlankQuizFool } from "@/features/quiz/lib";
+import { BlankQuiz } from "@/features/quiz/ui";
 import type { ValidDateExpression } from "@/entities/date/types";
 import { ProgressBar, ProgressCounter } from "@/entities/progress/ui";
+import type { ProgressProps } from "@/entities/progress/ui";
 import { useGetQuizByCategory } from "@/entities/quiz/api";
 import type {
+  BlankQuizFool,
   Category,
   GetQuizByCategoryResponse,
+  QuizFool,
 } from "@/entities/quiz/types";
 import { BackwardButton, Flex } from "@/shared/ui";
 
@@ -17,80 +28,78 @@ interface QuizWidgetProps {
   date: ValidDateExpression;
 }
 
-interface QuizContextProps {
-  page: number;
-  setPage: (page: number) => void;
-}
-
-type ResolvedQueryResult<T> = UseQueryResult<T, Error> & {
-  data: T;
-  isLoading: false;
-};
-
-const QuizContext = createContext<QuizContextProps | null>(null);
-
-const QuizQueryContext =
-  createContext<ResolvedQueryResult<GetQuizByCategoryResponse> | null>(null);
-
-export const Provider: React.FC<PropsWithChildren<QuizWidgetProps>> = ({
-  children,
-  ...props
-}) => {
-  const [page, setPage] = useState<number>(1);
-  const query = useGetQuizByCategory({ ...props, page });
-
-  // TODO: 현재 data는 KeepPreviousData로 인해 이전 데이터를 유지하고 있다.
-  // isPlaceHolderData 일때의 로직을 생각해 봐야 한다.
-  if (!query.data || query.isLoading) {
-    return <div>isLoading...</div>;
-  }
-
+const QuizWidgetContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <QuizContext value={{ page, setPage }}>
-      <QuizQueryContext value={query}>
-        <Flex as="main" direction="column" gap="lg" align="center">
-          {children}
-        </Flex>
-      </QuizQueryContext>
-    </QuizContext>
+    <Flex as="main" direction="column" gap="lg" align="center">
+      {children}
+    </Flex>
   );
 };
 
-export const ProgressNavigationBar: React.FC = () => {
-  const { data } = use(QuizQueryContext)!;
+interface QuizItemProps {
+  query: UseQueryResult<GetQuizByCategoryResponse>;
+}
+
+const QuizProgressNavigationBar: React.FC<QuizItemProps> = ({ query }) => {
+  const { totalPage, currentPage } = use(query.promise);
 
   return (
     <Flex gap="sm" align="center" as="nav" className="w-full">
       <BackwardButton />
       <ProgressBar
-        total={data.totalPage}
-        current={data.currentPage}
+        current={currentPage}
+        total={totalPage}
         classNames={{
           total: "h-4",
         }}
       />
-      <ProgressCounter total={data.totalPage} current={data.currentPage} />
+      <ProgressCounter current={currentPage} total={totalPage} />
     </Flex>
   );
 };
 
-export const Content: React.FC = () => {
-  const { quiz } = use(QuizQueryContext)!.data;
-  const { page, setPage } = use(QuizContext)!;
+interface ConditionalQuizFoolProps extends QuizItemProps {
+  handlePage: (callback: SetStateAction<number>) => void;
+}
+
+const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
+  query,
+  handlePage,
+}) => {
+  const { quiz } = use(query.promise);
 
   switch (quiz.type) {
     case "blank":
       return (
-        <FillInBlankQuiz {...quiz}>
-          <FillInBlankQuiz.Questions />
-          <FillInBlankQuiz.Options />
-          <FillInBlankQuiz.NextButton
-            onCorrect={() => setPage(page + 1)}
-            onIncorrect={() => alert("inCorrect!")}
-          />
-        </FillInBlankQuiz>
+        <BlankQuiz {...quiz}>
+          <BlankQuiz.Question />
+          <BlankQuiz.Options />
+          <div className="w-full flex justify-end">
+            <BlankQuiz.SubmitButton
+              onCorrect={() => handlePage((prev) => prev + 1)}
+              onIncorrect={() => alert("틀렸습니다.")}
+            >
+              {query.isFetching ? "loading" : "제출"}
+            </BlankQuiz.SubmitButton>
+          </div>
+        </BlankQuiz>
       );
     default:
       return null as never;
   }
+};
+
+export const QuizWidget: React.FC<QuizWidgetProps> = ({ category, date }) => {
+  const [page, setPage] = useState<number>(1);
+  const query = useGetQuizByCategory({ category, date, page });
+  const handlePage = (callback: SetStateAction<number>) => setPage(callback);
+
+  return (
+    <QuizWidgetContainer>
+      <Suspense fallback={<div>...loading</div>}>
+        <QuizProgressNavigationBar query={query} />
+        <ConditionalQuizFool query={query} handlePage={handlePage} />
+      </Suspense>
+    </QuizWidgetContainer>
+  );
 };
