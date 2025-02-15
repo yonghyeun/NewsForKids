@@ -37,12 +37,7 @@ export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
   });
 
   return (
-    <Flex
-      as="main"
-      direction="column"
-      gap="lg"
-      className="p-4 border max-w-5xl mx-auto"
-    >
+    <Flex as="main" direction="column" gap="lg">
       <HydrationBoundary state={prefetchedQueryClient}>
         <QuizWidget category={category} date={date} />
       </HydrationBoundary>
