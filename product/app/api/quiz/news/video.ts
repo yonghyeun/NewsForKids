@@ -57,7 +57,7 @@ export const pickYoutubeInfoByPage = (
   return {
     title,
     videoId: resourceId.videoId,
-    ratio: either(page === 2, "shorts", "video"),
+    ratio: either(page === 2, "video", "shorts"),
   };
 };
 

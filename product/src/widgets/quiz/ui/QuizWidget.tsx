@@ -7,7 +7,6 @@ import React, {
   useState,
   type PropsWithChildren,
 } from "react";
-import YouTube from "react-youtube";
 import { UseQueryResult } from "@tanstack/react-query";
 import { BlankQuiz } from "@/features/quiz/ui";
 import type { ValidDateExpression } from "@/entities/date/types";
@@ -17,6 +16,7 @@ import type {
   Category,
   GetQuizByCategoryResponse,
 } from "@/entities/quiz/types";
+import { YoutubeVideo } from "@/entities/video/ui";
 import { either } from "@/shared/lib/function";
 import { BackwardButton, Flex, Heading } from "@/shared/ui";
 
@@ -108,25 +108,7 @@ const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
   return (
     <Flex direction="column" gap="sm" align="center">
       <Heading color="black">{video.title}</Heading>
-      <YouTube
-        className={either(
-          video.ratio === "video",
-          "w-full aspect-video",
-          "h-full aspect-shorts",
-        )}
-        videoId={video.videoId}
-        opts={{
-          width: "100%",
-          height: "100%",
-          playerVars: {
-            autoplay: 1,
-            // 관련 영상이 아예 뜨지 않도록 하는 것은 불가능하다.
-            // 하지만 0으로 설정 할 경우 해당 채널의 영상만이 관련 영상으로 뜨게 제어 가능하다.
-            // https://developers.google.com/youtube/player_parameters#controls
-            rel: 0,
-          },
-        }}
-      />
+      <YoutubeVideo videoId={video.videoId} ratio={video.ratio} />
     </Flex>
   );
 };
