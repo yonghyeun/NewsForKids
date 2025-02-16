@@ -9,12 +9,6 @@ export interface BlankQuizFool {
   options: string[];
 }
 
-interface VideoInfo {
-  videoId: string;
-  title: string;
-  ratio: "shorts" | "video";
-}
-
 export type QuizFool = BlankQuizFool;
 
 export interface GetQuizByCategoryParams {
@@ -26,8 +20,11 @@ export interface GetQuizByCategoryParams {
 export type GetQuizByCategoryResponse = {
   category: Category;
   date: string;
-  video: VideoInfo;
+  video: {
+    title: string;
+    videoId: string;
+  };
   totalPage: number;
   currentPage: number;
-  quiz: QuizFool;
+  quiz: QuizFool[];
 };
