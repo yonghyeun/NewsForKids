@@ -1,2 +1,2 @@
-export * from "./setFiledByIndex";
+export * from "./setKeyByIndex";
 export * from "./extractKey";
