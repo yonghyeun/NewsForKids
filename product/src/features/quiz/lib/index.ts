@@ -1,1 +1,1 @@
-export * from "./useFillInBlankQuiz";
+export * from "./useBlankQuizFool";

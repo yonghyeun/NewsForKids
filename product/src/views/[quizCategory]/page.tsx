@@ -1,7 +1,7 @@
 import type { SearchParams } from "next/dist/server/request/search-params";
 import React from "react";
 import { HydrationBoundary } from "@tanstack/react-query";
-import * as Quiz from "@/widgets/quiz/ui";
+import { QuizWidget } from "@/widgets/quiz/ui";
 import { getValidDateExpression } from "@/entities/date/lib";
 import {
   isValidCategory,
@@ -37,21 +37,9 @@ export const QuizCategoryPage: React.FC<QuizCategoryPageProps> = async ({
   });
 
   return (
-    <Flex
-      as="main"
-      direction="column"
-      gap="lg"
-      className="p-4 border max-w-5xl mx-auto"
-    >
+    <Flex as="main" direction="column" gap="lg">
       <HydrationBoundary state={prefetchedQueryClient}>
-        <Quiz.Provider category={category} date={date}>
-          <Quiz.ProgressNavigationBar />
-          <div className="w-full max-w-96 aspect-square bg-gray-100">
-            비디오 대따큰 비디오
-          </div>
-          <Quiz.Content />
-          <footer>CopyRight 2025. All rights reserved.</footer>
-        </Quiz.Provider>
+        <QuizWidget category={category} date={date} />
       </HydrationBoundary>
     </Flex>
   );

@@ -12,6 +12,7 @@ export const ReactQueryProvider: React.FC<PropsWithChildren> = ({
         queries: {
           // 서버단에서 프리페치 한 쿼리가 캐시되도록 최소 staleTime 생성
           staleTime: 1000 * 30,
+          experimental_prefetchInRender: true,
         },
       },
     }),

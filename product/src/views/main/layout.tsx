@@ -8,7 +8,7 @@ export const RootLayout = ({
 }>) => {
   return (
     <html lang="kr">
-      <body className="min-h-screen">
+      <body className="min-h-screen p-4 border max-w-5xl mx-auto">
         <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
