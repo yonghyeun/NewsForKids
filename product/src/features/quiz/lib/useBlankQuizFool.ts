@@ -24,7 +24,7 @@ export const useBlankQuizFool = ({
   const questionWords = question.map(setKeyByIndex);
   const submitAbleWords = options.map(setKeyByIndex).map((item) => ({
     ...item,
-    isUsed: hasValueInArray(item.value, filledWords.map(extractKey("key"))),
+    isUsed: hasValueInArray(item.key, filledWords.map(extractKey("key"))),
   }));
 
   const isCorrect = isSameArray(filledWords.map(extractKey("value")), answer);

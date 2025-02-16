@@ -1,24 +1,23 @@
 "use client";
 
-import React, {
-  SetStateAction,
-  Suspense,
-  use,
-  useState,
-  type PropsWithChildren,
-} from "react";
+import React, { SetStateAction, Suspense, use, useState } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 import { BlankQuiz } from "@/features/quiz/ui";
 import type { ValidDateExpression } from "@/entities/date/types";
-import { ProgressBar, ProgressCounter } from "@/entities/progress/ui";
+import {
+  ProgressBar,
+  ProgressCounter,
+  ProgressProps,
+} from "@/entities/progress/ui";
 import { useGetQuizByCategory } from "@/entities/quiz/api";
 import type {
   Category,
   GetQuizByCategoryResponse,
+  QuizFool,
 } from "@/entities/quiz/types";
 import { YoutubeVideo } from "@/entities/video/ui";
 import { either } from "@/shared/lib/function";
-import { BackwardButton, Flex, Heading } from "@/shared/ui";
+import { BackwardButton, Button, Flex, Heading } from "@/shared/ui";
 
 interface QuizWidgetProps {
   category: Category;
@@ -31,56 +30,77 @@ export const QuizWidget: React.FC<QuizWidgetProps> = ({ category, date }) => {
   const handlePage = (callback: SetStateAction<number>) => setPage(callback);
 
   return (
-    <QuizWidgetContainer>
-      <Suspense fallback={<div>...loading</div>}>
-        <QuizProgressNavigationBar query={query} />
-        <QuizVideo query={query} />
-        <ConditionalQuizFool query={query} handlePage={handlePage} />
-      </Suspense>
-    </QuizWidgetContainer>
-  );
-};
-
-const QuizWidgetContainer: React.FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <Flex as="main" direction="column" gap="lg" align="center">
-      {children}
-    </Flex>
+    <Suspense fallback={<div>...loading</div>}>
+      <QuizItem query={query} handlePage={handlePage} />
+    </Suspense>
   );
 };
 
 interface QuizItemProps {
   query: UseQueryResult<GetQuizByCategoryResponse>;
+  handlePage: (callback: SetStateAction<number>) => void;
 }
 
-const QuizProgressNavigationBar: React.FC<QuizItemProps> = ({ query }) => {
-  const { totalPage, currentPage } = use(query.promise);
+const QuizItem: React.FC<QuizItemProps> = ({ query, handlePage }) => {
+  const { totalPage, currentPage, video, quiz } = use(query.promise);
+  const [pointer, setPointer] = useState<number>(0);
+
+  const handleNext = () =>
+    either(
+      pointer === quiz.length,
+      () => setPointer((pointer) => pointer + 1),
+      () => {
+        handlePage((page) => page + 1);
+        setPointer(0);
+      },
+    );
 
   return (
-    <Flex gap="sm" align="center" as="nav" className="w-full">
-      <BackwardButton />
-      <ProgressBar
-        current={currentPage}
-        total={totalPage}
-        classNames={{
-          total: "h-4",
-        }}
-      />
-      <ProgressCounter current={currentPage} total={totalPage} />
+    <Flex as="main" direction="column" gap="lg" align="center">
+      <QuizProgressNavigationBar current={currentPage} total={totalPage} />
+      {either(
+        pointer === 0,
+        <QuizFool onCorrect={handleNext} quiz={quiz[pointer - 1]} />,
+        <QuizVideo
+          videoId={video.videoId}
+          title={video.title}
+          onClick={handleNext}
+        />,
+      )}
     </Flex>
   );
 };
 
-interface ConditionalQuizFoolProps extends QuizItemProps {
-  handlePage: (callback: SetStateAction<number>) => void;
+const QuizProgressNavigationBar: React.FC<ProgressProps> = ({
+  total,
+  current,
+}) => {
+  return (
+    <Flex gap="sm" align="center" as="nav" className="w-full">
+      <BackwardButton />
+      <ProgressBar
+        current={current}
+        total={total}
+        classNames={{
+          total: "h-4",
+        }}
+      />
+      <ProgressCounter current={current} total={total} />
+    </Flex>
+  );
+};
+
+interface QuizFoolProps {
+  quiz: {
+    type: QuizFool["type"];
+    question: string[];
+    answer: string[];
+    options: string[];
+  };
+  onCorrect: () => void;
 }
 
-const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
-  query,
-  handlePage,
-}) => {
-  const { quiz } = use(query.promise);
-
+const QuizFool: React.FC<QuizFoolProps> = ({ onCorrect, quiz }) => {
   switch (quiz.type) {
     case "blank":
       return (
@@ -89,10 +109,10 @@ const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
           <BlankQuiz.Options />
           <div className="w-full flex justify-end">
             <BlankQuiz.SubmitButton
-              onCorrect={() => handlePage((prev) => prev + 1)}
+              onCorrect={onCorrect}
               onIncorrect={() => alert("틀렸습니다.")}
             >
-              {either(query.isFetching, "제출", "loading")}
+              제출
             </BlankQuiz.SubmitButton>
           </div>
         </BlankQuiz>
@@ -102,13 +122,20 @@ const ConditionalQuizFool: React.FC<ConditionalQuizFoolProps> = ({
   }
 };
 
-const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
-  const { video } = use(query.promise);
+interface QuizVideoProps {
+  videoId: string;
+  title: string;
+  onClick: () => void;
+}
 
+const QuizVideo: React.FC<QuizVideoProps> = ({ videoId, title, onClick }) => {
   return (
     <Flex direction="column" gap="sm" align="center">
-      <Heading color="black">{video.title}</Heading>
-      <YoutubeVideo videoId={video.videoId} />
+      <Heading color="black">{title}</Heading>
+      <YoutubeVideo videoId={videoId} />
+      <Button variant="primary" onClick={onClick}>
+        문제 풀기
+      </Button>
     </Flex>
   );
 };
