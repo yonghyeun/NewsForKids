@@ -108,7 +108,7 @@ const QuizVideo: React.FC<QuizItemProps> = ({ query }) => {
   return (
     <Flex direction="column" gap="sm" align="center">
       <Heading color="black">{video.title}</Heading>
-      <YoutubeVideo videoId={video.videoId} ratio={video.ratio} />
+      <YoutubeVideo videoId={video.videoId} />
     </Flex>
   );
 };
