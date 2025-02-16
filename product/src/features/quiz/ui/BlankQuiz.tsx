@@ -29,7 +29,7 @@ const Question = () => {
   let filledWordsPointer = 0;
 
   return (
-    <Flex gap="sm" align="center">
+    <Flex gap="sm" align="center" wrap="wrap" justify="center">
       {questionWords.map(({ value, key }) => {
         if (value === "*") {
           const filledWord = filledWords[filledWordsPointer++];
@@ -55,7 +55,7 @@ const Question = () => {
             </Button>
           );
         }
-        return value;
+        return `${value} `;
       })}
     </Flex>
   );
@@ -107,7 +107,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
       }}
       disabled={!isFullFilled}
       {...props}
-    > 
+    >
       {children}
     </Button>
   );
