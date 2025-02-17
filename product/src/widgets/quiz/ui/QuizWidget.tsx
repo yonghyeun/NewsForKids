@@ -42,29 +42,41 @@ interface QuizItemProps {
 }
 
 const QuizItem: React.FC<QuizItemProps> = ({ query, handlePage }) => {
-  const { totalPage, currentPage, video, quiz } = use(query.promise);
   const [pointer, setPointer] = useState<number>(0);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const { totalPage, currentPage, video, quiz } = use(query.promise);
 
-  const handleNext = () =>
+  const handleMovePointer = () => setPointer((pointer) => pointer + 1);
+  const handleMoveNext = () => {
     either(
       pointer === quiz.length,
       () => setPointer((pointer) => pointer + 1),
-      () => {
-        handlePage((page) => page + 1);
-        setPointer(0);
-      },
+      () =>
+        either(
+          currentPage === totalPage,
+          () => {
+            handlePage((page) => page + 1);
+            setPointer(0);
+          },
+          () => setIsSuccess(true),
+        ),
     );
+  };
+
+  if (isSuccess) {
+    return <div>success!!</div>;
+  }
 
   return (
     <Flex as="main" direction="column" gap="lg" align="center">
       <QuizProgressNavigationBar current={currentPage} total={totalPage} />
       {either(
         pointer === 0,
-        <QuizFool onCorrect={handleNext} quiz={quiz[pointer - 1]} />,
+        <QuizFool onCorrect={handleMoveNext} quiz={quiz[pointer - 1]} />,
         <QuizVideo
           videoId={video.videoId}
           title={video.title}
-          onClick={handleNext}
+          onClick={handleMovePointer}
         />,
       )}
     </Flex>

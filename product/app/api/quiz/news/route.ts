@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const getExampleData = (currentPage: number, date: string) => ({
   category: "news",
   date,
-  totalPage: 5,
+  totalPage: 3,
   currentPage,
   video: {
     title:
