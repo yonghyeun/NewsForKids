@@ -1,7 +1,6 @@
 import { PropsWithChildren, use } from "react";
 import { createContext } from "react";
 import { BlankQuizFool } from "@/entities/quiz/types";
-import { either } from "@/shared/lib/function";
 import { Button, Flex } from "@/shared/ui";
 import { useBlankQuizFool } from "../lib";
 
@@ -103,7 +102,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   return (
     <Button
       onClick={() => {
-        either(isCorrect, onIncorrect, onCorrect);
+        isCorrect ? onCorrect() : onIncorrect();
       }}
       disabled={!isFullFilled}
       {...props}

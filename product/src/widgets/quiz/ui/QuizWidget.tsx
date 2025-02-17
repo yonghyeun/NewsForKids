@@ -16,7 +16,6 @@ import type {
   QuizFool,
 } from "@/entities/quiz/types";
 import { YoutubeVideo } from "@/entities/video/ui";
-import { either } from "@/shared/lib/function";
 import { BackwardButton, Button, Flex, Heading } from "@/shared/ui";
 
 interface QuizWidgetProps {
@@ -47,20 +46,19 @@ const QuizItem: React.FC<QuizItemProps> = ({ query, handlePage }) => {
   const { totalPage, currentPage, video, quiz } = use(query.promise);
 
   const handleMovePointer = () => setPointer((pointer) => pointer + 1);
+
   const handleMoveNext = () => {
-    either(
-      pointer === quiz.length,
-      () => setPointer((pointer) => pointer + 1),
-      () =>
-        either(
-          currentPage === totalPage,
-          () => {
-            handlePage((page) => page + 1);
-            setPointer(0);
-          },
-          () => setIsSuccess(true),
-        ),
-    );
+    if (pointer < quiz.length) {
+      setPointer((pointer) => pointer + 1);
+      return;
+    }
+
+    if (currentPage === totalPage) {
+      setIsSuccess(true);
+      return;
+    }
+    handlePage((page) => page + 1);
+    setPointer(0);
   };
 
   if (isSuccess) {
@@ -70,14 +68,14 @@ const QuizItem: React.FC<QuizItemProps> = ({ query, handlePage }) => {
   return (
     <Flex as="main" direction="column" gap="lg" align="center">
       <QuizProgressNavigationBar current={currentPage} total={totalPage} />
-      {either(
-        pointer === 0,
-        <QuizFool onCorrect={handleMoveNext} quiz={quiz[pointer - 1]} />,
+      {pointer === 0 ? (
         <QuizVideo
           videoId={video.videoId}
           title={video.title}
           onClick={handleMovePointer}
-        />,
+        />
+      ) : (
+        <QuizFool onCorrect={handleMoveNext} quiz={quiz[pointer - 1]} />
       )}
     </Flex>
   );
