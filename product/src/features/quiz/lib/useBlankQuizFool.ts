@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BlankQuizFool } from "@/entities/quiz/types";
 import {
-  setFiledByIndex,
+  setKeyByIndex,
   extractKey,
   hasValueInArray,
   isSameArray,
@@ -21,8 +21,8 @@ export const useBlankQuizFool = ({
 }: Pick<BlankQuizFool, "question" | "answer" | "options">) => {
   const [filledWords, setFilledWords] = useState<ValueWithKey[]>([]);
 
-  const questionWords = question.map(setFiledByIndex("key"));
-  const submitAbleWords = options.map(setFiledByIndex("key")).map((item) => ({
+  const questionWords = question.map(setKeyByIndex);
+  const submitAbleWords = options.map(setKeyByIndex).map((item) => ({
     ...item,
     isUsed: hasValueInArray(item.key, filledWords.map(extractKey("key"))),
   }));

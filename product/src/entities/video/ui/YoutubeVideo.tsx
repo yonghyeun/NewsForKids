@@ -1,23 +1,14 @@
 import React from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
-import { either } from "@/shared/lib/function";
 
 interface YoutubeVideoProps extends YouTubeProps {
   videoId: string;
-  ratio: "video" | "shorts";
 }
 
-export const YoutubeVideo: React.FC<YoutubeVideoProps> = ({
-  ratio,
-  ...props
-}) => {
+export const YoutubeVideo: React.FC<YoutubeVideoProps> = ({ ...props }) => {
   return (
     <YouTube
-      className={either(
-        ratio === "video",
-        "h-full aspect-shorts",
-        "w-full aspect-video",
-      )}
+      className="h-full aspect-shorts"
       opts={{
         width: "100%",
         height: "100%",
